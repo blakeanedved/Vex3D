@@ -1,22 +1,48 @@
 #ifndef _SHADE_ENGINE_ENTITY_
 #define _SHADE_ENGINE_ENTITY_
+#include <iostream>
 #include <vector>
+#include <map>
+#include <string>
 
 namespace Shade {
+	class Entity;
+	std::map<std::string, Shade::Entity*> entity_table;
+	std::map<std::string, std::vector<Shade::Entity*>> type_table;
 	class Entity {
 		public:
+			std::string name;
+			std::string type;
 			bool generateAABB = true;
 		private:
 			std::vector<float> vertices;
 			std::vector<float> AABB;
 
 		public:
-			Entity(std::vector<float> vertices){
+			Entity(std::string name, std::string type, std::vector<float> vertices){
+				if (entity_table.find(name) != entity_table.end()){
+					std::cout << "Entity " << name << " already exists" << std::endl;
+					exit(1);
+				}
+				entity_table.insert(std::make_pair(name, this));
+				if (auto tt = type_table.find(type); tt == type_table.end()){
+					type_table.insert(std::make_pair(type, std::vector<Shade::Entity*>{this}));
+				} else {
+					tt->second.push_back(this);
+				}
+				this->name = std::move(name);
+				this->type = std::move(type);
 				this->vertices = vertices;
 				this->AABB = std::vector<float>(6);
 				this->GenerateAABB();
 			}
-			~Entity(){}
+			~Entity(){
+				if (entity_table.find(this->name)->second == this){
+					entity_table.erase(this->name);
+					auto temp = type_table.find(this->type);
+					temp->second.erase(std::find(temp->second.begin(), temp->second.end(), this));
+				}	
+			}
 			auto GetVertices() -> std::vector<float> {
 				return this->vertices;
 			}
