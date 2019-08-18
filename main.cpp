@@ -17,7 +17,7 @@ auto main() -> int {
 
 	//Shade::Entity e1("e1", "box", {-1.0f,-1.0f,-3.0f,0.0f,0.0f, -1.0f,-1.0f,-2.0f,0.0f,0.0f, -1.0f,1.0f,-3.0f,0.0f,0.0f, -1.0f,1.0f,-2.0f,0.0f,0.0f, 1.0f,-1.0f,-3.0f,0.0f,0.0f, 1.0f,-1.0f,-2.0f,0.0f,0.0f, 1.0f,1.0f,-3.0f,0.0f,0.0f, 1.0f,1.0f,-2.0f,0.0f,0.0f}, {0,1,2, 1,2,3, 0,2,4, 4,2,6, 0,1,4, 1,4,5, 1,3,5, 3,5,7, 2,3,6, 3,6,7, 4,5,6, 5,6,7});
 	
-	Vex::Entity e("e", "tri", {
+	Vex::Entity e("e", {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
 			-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
 			0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
@@ -39,7 +39,7 @@ auto main() -> int {
 		std::cout << "Vex3D Initialized" << std::endl;
 	};
 	Vex::Update = [](float dt){
-		for (auto& p : Vex::entity_table){
+		for (auto& p : Vex::object_table){
 			p.second->Update(dt);
 		}
 	};
@@ -50,7 +50,7 @@ auto main() -> int {
 		t->Bind();
 		s->Bind();
 		
-		for (auto& p : Vex::entity_table){
+		for (auto& p : Vex::object_table){
 			p.second->internal_render();
 			p.second->Render();
 		}

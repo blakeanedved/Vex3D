@@ -1,22 +1,18 @@
 #ifndef _VEX3D_ENTITY_
 #define _VEX3D_ENTITY_
 #include "Core.hpp"
+#include "GameObject.hpp"
 
 #include <iostream>
 #include <vector>
 #include <map>
 #include <string>
+#include <limits>
 
 namespace Vex {
-	class Entity {
+	class Entity : public GameObject {
 		public:
-			std::string name;
-			std::string type;
 			bool generateAABB = true;
-			std::function<void(float)> Update = [](float dt){};
-			std::function<void()> Render = [](){};
-			glm::vec3 position;
-			glm::vec3 rotation;
 		private:
 			std::vector<float> vertices;
 			std::vector<unsigned int> indices;
@@ -24,38 +20,21 @@ namespace Vex {
 			GLuint vaoID;
 			GLuint iboID;
 			GLuint vboID;
-			// make children
 
 		public:
-			Entity(std::string name, std::string type, std::vector<float> vertices, std::vector<unsigned int> indices);
+			Entity(std::string name, std::vector<float> vertices, std::vector<unsigned int> indices);
 			~Entity();
 			auto Init() -> void;
 
-			// Getters
 			auto GetVertices() -> std::vector<float>;
 			auto GetAABB() -> std::vector<float>;
 
 			auto GenerateAABB() -> void;
 			auto internal_render() -> void;
 	};
-
-	std::map<std::string, Vex::Entity*> entity_table;
-	std::map<std::string, std::vector<Vex::Entity*>> type_table;
 }
 
-Vex::Entity::Entity(std::string name, std::string type, std::vector<float> vertices, std::vector<unsigned int> indices){
-	if (entity_table.find(name) != entity_table.end()){
-		std::cout << "Entity " << name << " already exists" << std::endl;
-		exit(1);
-	}
-	entity_table.insert(std::make_pair(name, this));
-	if (auto tt = type_table.find(type); tt == type_table.end()){
-		type_table.insert(std::make_pair(type, std::vector<Vex::Entity*>{this}));
-	} else {
-		tt->second.push_back(this);
-	}
-	this->name = std::move(name);
-	this->type = std::move(type);
+Vex::Entity::Entity(std::string name, std::vector<float> vertices, std::vector<unsigned int> indices) : GameObject(name) {
 	this->vertices = vertices;
 	this->indices = indices;
 
@@ -76,15 +55,10 @@ Vex::Entity::Entity(std::string name, std::string type, std::vector<float> verti
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(unsigned int), &this->indices[0], GL_STATIC_DRAW);
 
 	this->AABB = std::vector<float>(6);
-	//this->GenerateAABB();
+	this->GenerateAABB();
 }
 
 Vex::Entity::~Entity(){
-	if (entity_table.find(this->name)->second == this){
-		entity_table.erase(this->name);
-		auto temp = type_table.find(this->type);
-		temp->second.erase(std::find(temp->second.begin(), temp->second.end(), this));
-	}
 }
 
 auto Vex::Entity::GetVertices() -> std::vector<float> {
@@ -96,13 +70,13 @@ auto Vex::Entity::GetAABB() -> std::vector<float> {
 }
 
 auto Vex::Entity::GenerateAABB() -> void {
-	this->AABB[0] = INT_MAX;
-	this->AABB[1] = INT_MAX;
-	this->AABB[2] = INT_MAX;
-	this->AABB[3] = INT_MIN;
-	this->AABB[4] = INT_MIN;
-	this->AABB[5] = INT_MIN;
-	for (int i = 0; i < this->vertices.size(); i+=3){
+	this->AABB[0] = std::numeric_limits<float>::max();
+	this->AABB[1] = std::numeric_limits<float>::max();
+	this->AABB[2] = std::numeric_limits<float>::max();
+	this->AABB[3] = std::numeric_limits<float>::min();
+	this->AABB[4] = std::numeric_limits<float>::min();
+	this->AABB[5] = std::numeric_limits<float>::min();
+	for (int i = 0; i < this->vertices.size(); i+=5){
 		this->AABB[0] = std::min(this->vertices[i], this->AABB[0]);
 		this->AABB[1] = std::min(this->vertices[i+1], this->AABB[1]);
 		this->AABB[2] = std::min(this->vertices[i+2], this->AABB[2]);
