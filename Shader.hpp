@@ -25,6 +25,12 @@ namespace Vex {
 		private:
 			auto LoadShaders(const char *fragmentShader, const char *vertexShader) -> GLuint;
 	};
+
+	std::unique_ptr<Vex::Shader> DefaultShader;
+	auto ShaderInit() -> void {
+		Vex::DefaultShader = std::make_unique<Vex::Shader>("shaders/default/vert.glsl", "shaders/default/frag.glsl");
+		Vex::DefaultShader->AddUniform("MVP");
+	}
 }
 
 Vex::Shader::Shader(const char *fragmentShader, const char *vertexShader) {

@@ -22,7 +22,7 @@ auto main() -> int {
 
 	auto c = std::make_unique<Vex::Camera>("main_camera", glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), 60.0f, 16.0f / 10.0f);
 
-	auto t = std::make_unique<Vex::Texture>("blackhole.jpg");
+	auto t = std::make_unique<Vex::Texture>("resources/images/blackhole.jpg");
 
 	auto s = std::make_unique<Vex::Shader>("shaders/basic/vert.glsl","shaders/basic/frag.glsl");
 	s->Bind();
