@@ -1,5 +1,6 @@
 #ifndef _SHADE_ENGINE_CORE_
 #define _SHADE_ENGINE_CORE_
+
 #include <iostream>
 #include <regex>
 
@@ -8,10 +9,11 @@
 #include <OpenGL/gl.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
 namespace Shade {
-	std::function<void()> Init;
-	std::function<void(float)> Update;
-	std::function<void()> Render;
+	std::function<void()> Init = [](){};
+	std::function<void(float)> Update = [](float dt){};
+	std::function<void()> Render = [](){};
 
 	GLenum err;
 	auto CheckForErrors() -> void;
@@ -26,6 +28,7 @@ namespace Shade {
 		public:
 			Window(int width, int height, char* title);
 			~Window();
+			auto Start() -> void;
 			auto Width() -> int;
 			auto Height() -> int;
 			auto GameLoopPre4_3() -> void;
@@ -99,8 +102,6 @@ Shade::Window::Window(int width, int height, char* title){
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	Shade::Init();
-
 	glGetIntegerv(GL_MAJOR_VERSION, &this->gl_version_major);
 	glGetIntegerv(GL_MINOR_VERSION, &this->gl_version_minor);
 	std::cout << "OpenGL Version: " << this->gl_version_major << "." << this->gl_version_minor << std::endl;
@@ -110,14 +111,22 @@ Shade::Window::Window(int width, int height, char* title){
 			fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type, severity, message);
 			exit(1);
 		}, 0);
-		this->GameLoopPost4_3();
-	} else {
-		this->GameLoopPre4_3();
 	}
 }
 
 Shade::Window::~Window(){
 	glfwTerminate();
+}
+
+auto Shade::Window::Start() -> void {
+
+	Shade::Init();
+
+	if ((this->gl_version_major == 4 && this->gl_version_minor >= 3) || (this->gl_version_major > 4)){
+		this->GameLoopPost4_3();
+	} else {
+		this->GameLoopPre4_3();
+	}
 }
 
 auto Shade::Window::Width() -> int {

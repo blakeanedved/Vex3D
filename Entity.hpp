@@ -1,5 +1,7 @@
 #ifndef _SHADE_ENGINE_ENTITY_
 #define _SHADE_ENGINE_ENTITY_
+#include "Core.hpp"
+
 #include <iostream>
 #include <vector>
 #include <map>
@@ -11,22 +13,37 @@ namespace Shade {
 			std::string name;
 			std::string type;
 			bool generateAABB = true;
+			std::function<void(float)> Update = [](float dt){};
+			std::function<void()> Render = [](){};
+			glm::vec3 position;
+			glm::vec3 rotation;
 		private:
 			std::vector<float> vertices;
+			std::vector<unsigned int> indices;
 			std::vector<float> AABB;
+			GLuint vaoID;
+			GLuint iboID;
+			GLuint vboID;
+			// make children
 
 		public:
-			Entity(std::string name, std::string type, std::vector<float> vertices);
+			Entity(std::string name, std::string type, std::vector<float> vertices, std::vector<unsigned int> indices);
 			~Entity();
+			auto Init() -> void;
+
+			// Getters
 			auto GetVertices() -> std::vector<float>;
 			auto GetAABB() -> std::vector<float>;
+
 			auto GenerateAABB() -> void;
+			auto internal_render() -> void;
 	};
+
 	std::map<std::string, Shade::Entity*> entity_table;
 	std::map<std::string, std::vector<Shade::Entity*>> type_table;
 }
 
-Shade::Entity::Entity(std::string name, std::string type, std::vector<float> vertices){
+Shade::Entity::Entity(std::string name, std::string type, std::vector<float> vertices, std::vector<unsigned int> indices){
 	if (entity_table.find(name) != entity_table.end()){
 		std::cout << "Entity " << name << " already exists" << std::endl;
 		exit(1);
@@ -40,8 +57,26 @@ Shade::Entity::Entity(std::string name, std::string type, std::vector<float> ver
 	this->name = std::move(name);
 	this->type = std::move(type);
 	this->vertices = vertices;
+	this->indices = indices;
+
+	glGenVertexArrays(1, &this->vaoID);
+    glBindVertexArray(this->vaoID);
+
+	glGenBuffers(1, &this->vboID);
+    glBindBuffer(GL_ARRAY_BUFFER, this->vboID);
+    glBufferData(GL_ARRAY_BUFFER, this->vertices.size() * sizeof(float), &this->vertices[0], GL_DYNAMIC_DRAW);
+	
+	glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, reinterpret_cast<void*>(0));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, reinterpret_cast<void*>(3 * sizeof(GLfloat)));
+
+	glGenBuffers(1, &this->iboID);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->iboID);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(unsigned int), &this->indices[0], GL_STATIC_DRAW);
+
 	this->AABB = std::vector<float>(6);
-	this->GenerateAABB();
+	//this->GenerateAABB();
 }
 
 Shade::Entity::~Entity(){
@@ -77,4 +112,9 @@ auto Shade::Entity::GenerateAABB() -> void {
 	}
 }
 
+auto Shade::Entity::internal_render() -> void {
+	glBindVertexArray(this->vaoID);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->iboID);
+    glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, nullptr);
+}
 #endif
