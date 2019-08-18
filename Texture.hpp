@@ -1,5 +1,5 @@
-#ifndef _SHADE_ENGINE_TEXTURE_
-#define _SHADE_ENGINE_TEXTURE_
+#ifndef _VEX3D_TEXTURE_
+#define _VEX3D_TEXTURE_
 
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -7,7 +7,7 @@
 #include "stb_image/stb_image.h"
 
 
-namespace Shade {
+namespace Vex {
 	class Texture {
 		private:
 			unsigned char *localBuffer;
@@ -24,7 +24,7 @@ namespace Shade {
 }
 
 
-Shade::Texture::Texture(const std::string &filepath) {
+Vex::Texture::Texture(const std::string &filepath) {
     stbi_set_flip_vertically_on_load(1);
     this->localBuffer = stbi_load(filepath.c_str(), &this->width, &this->height, &this->channels, 4);
 
@@ -43,16 +43,16 @@ Shade::Texture::Texture(const std::string &filepath) {
         stbi_image_free(this->localBuffer);
 }
 
-Shade::Texture::~Texture() {
+Vex::Texture::~Texture() {
 	glDeleteTextures(1, &this->textureID);
 }
 
-auto Shade::Texture::Bind(GLuint slot) -> void {
+auto Vex::Texture::Bind(GLuint slot) -> void {
     glActiveTexture(GL_TEXTURE0 + slot);
     glBindTexture(GL_TEXTURE_2D, this->textureID);
 }
 
-auto Shade::Texture::Unbind() -> void {
+auto Vex::Texture::Unbind() -> void {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 

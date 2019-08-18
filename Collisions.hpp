@@ -1,14 +1,14 @@
-#ifndef _SHADE_ENGINE_COLLISIONS_
-#define _SHADE_ENGINE_COLLISIONS_
+#ifndef _VEX3D_COLLISIONS_
+#define _VEX3D_COLLISIONS_
 #include "Entity.hpp" // inevitably this should be left out but leaving in for my linter
 
-namespace Shade {
+namespace Vex {
 	namespace Collisions {
-		auto AABB(Shade::Entity& e1, Shade::Entity& e2) -> bool;
+		auto AABB(Vex::Entity& e1, Vex::Entity& e2) -> bool;
 	}
 }
 
-auto AABB(Shade::Entity& e1, Shade::Entity& e2) -> bool {
+auto AABB(Vex::Entity& e1, Vex::Entity& e2) -> bool {
 	std::vector<float> a1 = e1.GetAABB();
 	std::vector<float> a2 = e2.GetAABB();
 

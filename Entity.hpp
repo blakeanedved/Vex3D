@@ -1,5 +1,5 @@
-#ifndef _SHADE_ENGINE_ENTITY_
-#define _SHADE_ENGINE_ENTITY_
+#ifndef _VEX3D_ENTITY_
+#define _VEX3D_ENTITY_
 #include "Core.hpp"
 
 #include <iostream>
@@ -7,7 +7,7 @@
 #include <map>
 #include <string>
 
-namespace Shade {
+namespace Vex {
 	class Entity {
 		public:
 			std::string name;
@@ -39,18 +39,18 @@ namespace Shade {
 			auto internal_render() -> void;
 	};
 
-	std::map<std::string, Shade::Entity*> entity_table;
-	std::map<std::string, std::vector<Shade::Entity*>> type_table;
+	std::map<std::string, Vex::Entity*> entity_table;
+	std::map<std::string, std::vector<Vex::Entity*>> type_table;
 }
 
-Shade::Entity::Entity(std::string name, std::string type, std::vector<float> vertices, std::vector<unsigned int> indices){
+Vex::Entity::Entity(std::string name, std::string type, std::vector<float> vertices, std::vector<unsigned int> indices){
 	if (entity_table.find(name) != entity_table.end()){
 		std::cout << "Entity " << name << " already exists" << std::endl;
 		exit(1);
 	}
 	entity_table.insert(std::make_pair(name, this));
 	if (auto tt = type_table.find(type); tt == type_table.end()){
-		type_table.insert(std::make_pair(type, std::vector<Shade::Entity*>{this}));
+		type_table.insert(std::make_pair(type, std::vector<Vex::Entity*>{this}));
 	} else {
 		tt->second.push_back(this);
 	}
@@ -79,7 +79,7 @@ Shade::Entity::Entity(std::string name, std::string type, std::vector<float> ver
 	//this->GenerateAABB();
 }
 
-Shade::Entity::~Entity(){
+Vex::Entity::~Entity(){
 	if (entity_table.find(this->name)->second == this){
 		entity_table.erase(this->name);
 		auto temp = type_table.find(this->type);
@@ -87,15 +87,15 @@ Shade::Entity::~Entity(){
 	}
 }
 
-auto Shade::Entity::GetVertices() -> std::vector<float> {
+auto Vex::Entity::GetVertices() -> std::vector<float> {
 	return this->vertices;
 }
 
-auto Shade::Entity::GetAABB() -> std::vector<float> {
+auto Vex::Entity::GetAABB() -> std::vector<float> {
 	return this->AABB;
 }
 
-auto Shade::Entity::GenerateAABB() -> void {
+auto Vex::Entity::GenerateAABB() -> void {
 	this->AABB[0] = INT_MAX;
 	this->AABB[1] = INT_MAX;
 	this->AABB[2] = INT_MAX;
@@ -112,9 +112,10 @@ auto Shade::Entity::GenerateAABB() -> void {
 	}
 }
 
-auto Shade::Entity::internal_render() -> void {
+auto Vex::Entity::internal_render() -> void {
 	glBindVertexArray(this->vaoID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->iboID);
     glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, nullptr);
 }
+
 #endif

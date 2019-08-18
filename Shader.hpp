@@ -1,12 +1,12 @@
-#ifndef _SHADE_ENGINE_SHADER_
-#define _SHADE_ENGINE_SHADER_
+#ifndef _VEX3D_SHADER_
+#define _VEX3D_SHADER_
 
 #include "Core.hpp"
 #include <map>
 #include <sstream>
 #include <fstream>
 
-namespace Shade {
+namespace Vex {
 	class Shader {
 		private:
 			unsigned int programID;
@@ -27,15 +27,15 @@ namespace Shade {
 	};
 }
 
-Shade::Shader::Shader(const char *fragmentShader, const char *vertexShader) {
+Vex::Shader::Shader(const char *fragmentShader, const char *vertexShader) {
     this->programID = this->LoadShaders(fragmentShader, vertexShader);
 }
 
-Shade::Shader::~Shader() {}
+Vex::Shader::~Shader() {}
 
-auto Shade::Shader::Bind() -> void { glUseProgram(this->programID); }
+auto Vex::Shader::Bind() -> void { glUseProgram(this->programID); }
 
-auto Shade::Shader::AddUniform(const std::string &uniformName) -> void {
+auto Vex::Shader::AddUniform(const std::string &uniformName) -> void {
     if (auto it = this->uniforms.find(uniformName);
         it == this->uniforms.end()) {
         this->uniforms.insert(
@@ -44,14 +44,14 @@ auto Shade::Shader::AddUniform(const std::string &uniformName) -> void {
     }
 }
 
-auto Shade::Shader::SetUniform(const std::string &uniformName, GLuint value) -> void {
+auto Vex::Shader::SetUniform(const std::string &uniformName, GLuint value) -> void {
     if (auto it = this->uniforms.find(uniformName);
         it != this->uniforms.end()) {
         glUniform1i(it->second, value);
     }
 }
 
-auto Shade::Shader::SetUniform(const std::string &uniformName, glm::mat4 value)
+auto Vex::Shader::SetUniform(const std::string &uniformName, glm::mat4 value)
     -> void {
     if (auto it = this->uniforms.find(uniformName);
         it != this->uniforms.end()) {
@@ -59,7 +59,7 @@ auto Shade::Shader::SetUniform(const std::string &uniformName, glm::mat4 value)
     }
 }
 
-auto Shade::Shader::SetUniform(const std::string &uniformName, glm::vec4 value)
+auto Vex::Shader::SetUniform(const std::string &uniformName, glm::vec4 value)
     -> void {
     if (auto it = this->uniforms.find(uniformName);
         it != this->uniforms.end()) {
@@ -67,7 +67,7 @@ auto Shade::Shader::SetUniform(const std::string &uniformName, glm::vec4 value)
     }
 }
 
-auto Shade::Shader::LoadShaders(const char *vertex_file_path,
+auto Vex::Shader::LoadShaders(const char *vertex_file_path,
                          const char *fragment_file_path) -> GLuint {
 
     // Create the shaders

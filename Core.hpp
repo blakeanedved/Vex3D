@@ -1,5 +1,5 @@
-#ifndef _SHADE_ENGINE_CORE_
-#define _SHADE_ENGINE_CORE_
+#ifndef _VEX3D_CORE_
+#define _VEX3D_CORE_
 
 #include <iostream>
 #include <regex>
@@ -10,7 +10,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace Shade {
+namespace Vex {
 	std::function<void()> Init = [](){};
 	std::function<void(float)> Update = [](float dt){};
 	std::function<void()> Render = [](){};
@@ -39,7 +39,7 @@ namespace Shade {
 	};
 }
 
-auto Shade::CheckForErrors() -> void {
+auto Vex::CheckForErrors() -> void {
 	while ((err = glGetError()) != GL_NO_ERROR){
 		if (err == GL_INVALID_ENUM){
 			fprintf( stderr, "GL CALLBACK: ** GL ERROR ** message = GL_INVALID_ENUM\n");
@@ -62,7 +62,7 @@ auto Shade::CheckForErrors() -> void {
 	}
 }
 
-Shade::Window::Window(int width, int height, char* title){
+Vex::Window::Window(int width, int height, char* title){
 	this->width = width;
 	this->height = height;
 
@@ -114,13 +114,13 @@ Shade::Window::Window(int width, int height, char* title){
 	}
 }
 
-Shade::Window::~Window(){
+Vex::Window::~Window(){
 	glfwTerminate();
 }
 
-auto Shade::Window::Start() -> void {
+auto Vex::Window::Start() -> void {
 
-	Shade::Init();
+	Vex::Init();
 
 	if ((this->gl_version_major == 4 && this->gl_version_minor >= 3) || (this->gl_version_major > 4)){
 		this->GameLoopPost4_3();
@@ -129,15 +129,15 @@ auto Shade::Window::Start() -> void {
 	}
 }
 
-auto Shade::Window::Width() -> int {
+auto Vex::Window::Width() -> int {
 	return this->width;
 }
 
-auto Shade::Window::Height() -> int {
+auto Vex::Window::Height() -> int {
 	return this->height;
 }
 
-auto Shade::Window::GameLoopPre4_3() -> void {
+auto Vex::Window::GameLoopPre4_3() -> void {
 	double frameTime = 1.0 / this->FPS;
 	double lastTime, currentTime, dt, nextFrame = 0;
 	lastTime = glfwGetTime();
@@ -150,16 +150,16 @@ auto Shade::Window::GameLoopPre4_3() -> void {
 		lastTime = currentTime;
 
 		if (nextFrame >= frameTime) {
-			Shade::Update(nextFrame);
-			Shade::Render();
+			Vex::Update(nextFrame);
+			Vex::Render();
 			nextFrame = 0.0;
 			this->PollEvents();
-			Shade::CheckForErrors();
+			Vex::CheckForErrors();
 		}
 	} while (!this->ShouldClose());
 }
 
-auto Shade::Window::GameLoopPost4_3() -> void {
+auto Vex::Window::GameLoopPost4_3() -> void {
 	double frameTime = 1.0 / this->FPS;
 	double lastTime, currentTime, dt, nextFrame = 0;
 	lastTime = glfwGetTime();
@@ -172,23 +172,23 @@ auto Shade::Window::GameLoopPost4_3() -> void {
 		lastTime = currentTime;
 
 		if (nextFrame >= frameTime) {
-			Shade::Update(nextFrame);
-			Shade::Render();
+			Vex::Update(nextFrame);
+			Vex::Render();
 			nextFrame = 0.0;
 			this->PollEvents();
 		}
 	} while (!this->ShouldClose());
 }
 
-auto Shade::Window::IsKeyDown(int key) -> bool {
+auto Vex::Window::IsKeyDown(int key) -> bool {
 	return glfwGetKey(this->window, key);
 }
 
-auto Shade::Window::ShouldClose() -> bool {
+auto Vex::Window::ShouldClose() -> bool {
 	return glfwWindowShouldClose(this->window) == GLFW_TRUE;
 }
 
-auto Shade::Window::PollEvents() -> void {
+auto Vex::Window::PollEvents() -> void {
 	glfwSwapBuffers(this->window);
 	glfwPollEvents();
 }
