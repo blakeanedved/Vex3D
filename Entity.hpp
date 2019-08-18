@@ -22,7 +22,7 @@ namespace Vex {
 			GLuint vboID;
 
 		public:
-			Entity(std::string name, std::vector<float> vertices, std::vector<unsigned int> indices);
+			Entity(std::string name, glm::vec3 position, glm::vec3 rotation, std::vector<float> vertices, std::vector<unsigned int> indices);
 			~Entity();
 			auto Init() -> void;
 
@@ -34,7 +34,7 @@ namespace Vex {
 	};
 }
 
-Vex::Entity::Entity(std::string name, std::vector<float> vertices, std::vector<unsigned int> indices) : GameObject(name) {
+Vex::Entity::Entity(std::string name, glm::vec3 position, glm::vec3 rotation, std::vector<float> vertices, std::vector<unsigned int> indices) : GameObject(name, position, rotation) {
 	this->vertices = vertices;
 	this->indices = indices;
 

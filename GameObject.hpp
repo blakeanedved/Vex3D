@@ -23,7 +23,7 @@ namespace Vex {
 			std::vector<GameObject*> children;
 
 		public:
-			GameObject(std::string name);
+			GameObject(std::string name, glm::vec3 position, glm::vec3 rotation);
 			~GameObject();
 
 			auto MakeChild(Vex::GameObject* parent) -> void;
@@ -47,13 +47,15 @@ namespace Vex {
 	std::map<std::string, Vex::GameObject*> object_table;
 }
 
-Vex::GameObject::GameObject(std::string name) {
+Vex::GameObject::GameObject(std::string name, glm::vec3 position, glm::vec3 rotation) {
 	if (object_table.find(name) != object_table.end()){
 		std::cout << "Entity " << name << " already exists" << std::endl;
 		exit(1);
 	}
 	object_table.insert(std::make_pair(name, this));
 	this->name = std::move(name);
+	this->position = position;
+	this->rotation = rotation;
 }
 
 Vex::GameObject::~GameObject() {
@@ -84,7 +86,7 @@ auto Vex::GameObject::SetPosition(glm::vec3 position) -> void {
 }
 
 auto Vex::GameObject::SetRotation(glm::vec3 rotation) -> void {
-	glm::vec3 changeInRotation = this->rotation - rotation;
+	glm::vec3 changeInRotation = rotation - this->rotation;
 	this->rotation = rotation;
 	for (auto& child : this->children){
 		child->Rotate(changeInRotation, this->position);
@@ -92,7 +94,11 @@ auto Vex::GameObject::SetRotation(glm::vec3 rotation) -> void {
 }
 
 auto Vex::GameObject::SetRotation(glm::vec3 rotation, glm::vec3 origin) -> void {
-	this->Rotate(this->rotation - rotation, origin);
+	glm::vec3 changeInRotation = rotation - this->rotation;
+	this->Rotate(changeInRotation, origin);
+	for (auto& child : this->children){
+		child->Rotate(changeInRotation);
+	}
 }
 
 auto Vex::GameObject::SetChildPosition(glm::vec3 position) -> void {
@@ -110,7 +116,7 @@ auto Vex::GameObject::Move(glm::vec3 adjustment) -> void {
 }
 
 auto Vex::GameObject::Rotate(glm::vec3 rotation) -> void {
-	this->rotation = rotation;
+	this->rotation += rotation;
 	for (auto& child : this->children) {
 		child->Rotate(rotation, this->position);
 	}
