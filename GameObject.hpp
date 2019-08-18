@@ -41,6 +41,8 @@ namespace Vex {
 			auto Rotate(glm::vec3 rotation) -> void;
 			auto Rotate(glm::vec3 rotation, glm::vec3 origin) -> void;
 
+			auto GenerateRotMatrix() -> glm::mat4;
+
 			virtual auto internal_render() -> void = 0;
 	};
 
@@ -133,6 +135,14 @@ auto Vex::GameObject::Rotate(glm::vec3 rotation, glm::vec3 origin) -> void {
 	for (auto& child : this->children) {
 		child->Rotate(rotation, origin);
 	}
+}
+
+auto Vex::GameObject::GenerateRotMatrix() -> glm::mat4 {
+	glm::mat4 rotMatrix = glm::mat4(1.0f);
+	rotMatrix = glm::rotate(rotMatrix, this->rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+	rotMatrix = glm::rotate(rotMatrix, this->rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+	rotMatrix = glm::rotate(rotMatrix, this->rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+	return rotMatrix;
 }
 
 #endif

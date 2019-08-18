@@ -21,6 +21,7 @@ namespace Vex {
 			auto SetUniform(const std::string &uniformName, GLuint value) -> void;
 			auto SetUniform(const std::string &uniformName, glm::mat4 value) -> void;
 			auto SetUniform(const std::string &uniformName, glm::vec4 value) -> void;
+			auto SetUniform(const std::string &uniformName, glm::vec3 value) -> void;
 
 		private:
 			auto LoadShaders(const char *fragmentShader, const char *vertexShader) -> GLuint;
@@ -57,19 +58,24 @@ auto Vex::Shader::SetUniform(const std::string &uniformName, GLuint value) -> vo
     }
 }
 
-auto Vex::Shader::SetUniform(const std::string &uniformName, glm::mat4 value)
-    -> void {
+auto Vex::Shader::SetUniform(const std::string &uniformName, glm::mat4 value) -> void {
     if (auto it = this->uniforms.find(uniformName);
         it != this->uniforms.end()) {
         glUniformMatrix4fv(it->second, 1, GL_FALSE, &value[0][0]);
     }
 }
 
-auto Vex::Shader::SetUniform(const std::string &uniformName, glm::vec4 value)
-    -> void {
+auto Vex::Shader::SetUniform(const std::string &uniformName, glm::vec4 value) -> void {
     if (auto it = this->uniforms.find(uniformName);
         it != this->uniforms.end()) {
-        glUniform4fv(it->second, 4, &value[0]);
+        glUniform4fv(it->second, 1, &value[0]);
+    }
+}
+
+auto Vex::Shader::SetUniform(const std::string &uniformName, glm::vec3 value) -> void {
+    if (auto it = this->uniforms.find(uniformName);
+        it != this->uniforms.end()) {
+        glUniform3fv(it->second, 1, &value[0]);
     }
 }
 

@@ -10,7 +10,7 @@
 auto main() -> int {
 	auto window = std::make_unique<Vex::Window>(1920, 1080, const_cast<char*>("Hello, World!"));
 	
-	Vex::Entity e("e", glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f), {
+	Vex::Entity e("e", glm::vec3(0.0f), glm::vec3(0.0f), {
 			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
 			-0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
 			0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
@@ -28,9 +28,10 @@ auto main() -> int {
 	s->Bind();
 	s->AddUniform("u_Texture");
 	s->AddUniform("MVP");
+	s->AddUniform("pos");
+	s->AddUniform("rotMatrix");
 	s->SetUniform("u_Texture", 0);
 	s->SetUniform("MVP", c->GetMVP());
-
 
 	Vex::Init = [&c](){
 		std::cout << "Vex3D Initialized" << std::endl;
@@ -38,8 +39,9 @@ auto main() -> int {
 		Vex::DefaultShader->Bind();
 		Vex::DefaultShader->SetUniform("MVP", c->GetMVP());
 	};
-	Vex::Update = [&c](float dt){
+	Vex::Update = [&c,&e](float dt){
 		c->Rotate(glm::vec3(0.0f, 0.5f * dt, 0.0f));
+		e.Rotate(glm::vec3(0.5f * dt, 0.5f * dt, 0.5f * dt));
 		for (auto& p : Vex::object_table){
 			p.second->Update(dt);
 		}
@@ -55,6 +57,8 @@ auto main() -> int {
 
 		s->SetUniform("MVP", c->GetMVP());
 		for (auto& p : Vex::object_table){
+			s->SetUniform("pos", p.second->GetPosition());
+			s->SetUniform("rotMatrix", p.second->GenerateRotMatrix());
 			p.second->internal_render();
 			p.second->Render();
 		}
