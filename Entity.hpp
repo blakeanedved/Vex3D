@@ -76,7 +76,7 @@ auto Vex::Entity::GenerateAABB() -> void {
 	this->AABB[3] = std::numeric_limits<float>::min();
 	this->AABB[4] = std::numeric_limits<float>::min();
 	this->AABB[5] = std::numeric_limits<float>::min();
-	for (int i = 0; i < this->vertices.size(); i+=5){
+	for (unsigned int i = 0; i < this->vertices.size(); i+=5){
 		this->AABB[0] = std::min(this->vertices[i], this->AABB[0]);
 		this->AABB[1] = std::min(this->vertices[i+1], this->AABB[1]);
 		this->AABB[2] = std::min(this->vertices[i+2], this->AABB[2]);
