@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <regex>
+#include <map>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -42,6 +43,7 @@ namespace Vex {
 			auto IsKeyDown(int key) -> bool;
 			auto ShouldClose() -> bool;
 			auto PollEvents() -> void;
+			auto GetWindow() -> GLFWwindow*;
 	};
 }
 
@@ -198,4 +200,9 @@ auto Vex::Window::PollEvents() -> void {
 	glfwSwapBuffers(this->window);
 	glfwPollEvents();
 }
+
+auto Vex::Window::GetWindow() -> GLFWwindow* {
+	return this->window;
+}
+
 #endif
