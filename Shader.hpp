@@ -13,18 +13,18 @@ namespace Vex {
 			std::map<std::string, unsigned int> uniforms;
 
 		public:
-			Shader(const char *fragmentShader, const char *vertexShader);
+			Shader(const char* fragmentShader, const char* vertexShader);
 			~Shader();
 
-			auto AddUniform(const std::string &uniformName) -> void;
+			auto AddUniform(const std::string& uniformName) -> void;
 			auto Bind() -> void;
-			auto SetUniform(const std::string &uniformName, GLuint value) -> void;
-			auto SetUniform(const std::string &uniformName, glm::mat4 value) -> void;
-			auto SetUniform(const std::string &uniformName, glm::vec4 value) -> void;
-			auto SetUniform(const std::string &uniformName, glm::vec3 value) -> void;
+			auto SetUniform(const std::string& uniformName, GLuint value) -> void;
+			auto SetUniform(const std::string& uniformName, glm::mat4 value) -> void;
+			auto SetUniform(const std::string& uniformName, glm::vec4 value) -> void;
+			auto SetUniform(const std::string& uniformName, glm::vec3 value) -> void;
 
 		private:
-			auto LoadShaders(const char *fragmentShader, const char *vertexShader) -> GLuint;
+			auto LoadShaders(const char* fragmentShader, const char* vertexShader) -> GLuint;
 	};
 
 	std::unique_ptr<Vex::Shader> DefaultShader;
@@ -34,15 +34,17 @@ namespace Vex {
 	}
 }
 
-Vex::Shader::Shader(const char *fragmentShader, const char *vertexShader) {
+Vex::Shader::Shader(const char* fragmentShader, const char* vertexShader) {
     this->programID = this->LoadShaders(fragmentShader, vertexShader);
 }
 
 Vex::Shader::~Shader() {}
 
-auto Vex::Shader::Bind() -> void { glUseProgram(this->programID); }
+auto Vex::Shader::Bind() -> void {
+	glUseProgram(this->programID);
+}
 
-auto Vex::Shader::AddUniform(const std::string &uniformName) -> void {
+auto Vex::Shader::AddUniform(const std::string& uniformName) -> void {
     if (auto it = this->uniforms.find(uniformName);
         it == this->uniforms.end()) {
         this->uniforms.insert(
@@ -51,36 +53,35 @@ auto Vex::Shader::AddUniform(const std::string &uniformName) -> void {
     }
 }
 
-auto Vex::Shader::SetUniform(const std::string &uniformName, GLuint value) -> void {
+auto Vex::Shader::SetUniform(const std::string& uniformName, GLuint value) -> void {
     if (auto it = this->uniforms.find(uniformName);
         it != this->uniforms.end()) {
         glUniform1i(it->second, value);
     }
 }
 
-auto Vex::Shader::SetUniform(const std::string &uniformName, glm::mat4 value) -> void {
+auto Vex::Shader::SetUniform(const std::string& uniformName, glm::mat4 value) -> void {
     if (auto it = this->uniforms.find(uniformName);
         it != this->uniforms.end()) {
         glUniformMatrix4fv(it->second, 1, GL_FALSE, &value[0][0]);
     }
 }
 
-auto Vex::Shader::SetUniform(const std::string &uniformName, glm::vec4 value) -> void {
+auto Vex::Shader::SetUniform(const std::string& uniformName, glm::vec4 value) -> void {
     if (auto it = this->uniforms.find(uniformName);
         it != this->uniforms.end()) {
         glUniform4fv(it->second, 1, &value[0]);
     }
 }
 
-auto Vex::Shader::SetUniform(const std::string &uniformName, glm::vec3 value) -> void {
+auto Vex::Shader::SetUniform(const std::string& uniformName, glm::vec3 value) -> void {
     if (auto it = this->uniforms.find(uniformName);
         it != this->uniforms.end()) {
         glUniform3fv(it->second, 1, &value[0]);
     }
 }
 
-auto Vex::Shader::LoadShaders(const char *vertex_file_path,
-                         const char *fragment_file_path) -> GLuint {
+auto Vex::Shader::LoadShaders(const char* vertex_file_path, const char* fragment_file_path) -> GLuint {
 
     // Create the shaders
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
