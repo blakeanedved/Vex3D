@@ -48,7 +48,7 @@ auto main() -> int {
 			e.Rotate(glm::vec3(0.5f * dt, 0.5f * dt, 0.5f * dt));
 		}
 		//c->Rotate(glm::vec3(0.0f, 0.5f * dt, 0.0f));
-		if(Vex::Input::GetKey("Up")){
+		if(Vex::Input::GetKey(999999)){
 			e.SetPosition(e.GetPosition() + glm::vec3(0.0f, 0.9f*dt, 0.0f));
 		}else if(Vex::Input::GetKey("Down")){
 			e.SetPosition(e.GetPosition() + glm::vec3(0.0f, -0.9f*dt, 0.0f));
@@ -70,6 +70,10 @@ auto main() -> int {
 		}
 		if(Vex::Input::GetMouseButtonUp(1)){
 			std::cout << "Right Mouse Button Up" << std::endl;
+		}
+		if(Vex::Input::GetMouseButton(0)){
+			glm::vec2 delta = Vex::Input::GetMouseDelta();
+			std::cout << "Mouse Delta: " << delta.x << ", " << delta.y << std::endl;
 		}
 		for (auto& p : Vex::object_table){
 			p.second->Update(dt);

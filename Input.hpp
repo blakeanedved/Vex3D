@@ -159,6 +159,8 @@ namespace Vex{
 		};
 		std::unordered_map<int,int> keyPresses = {}; //The keys that were pressed or released this frame. 0 = nothing, 1 = pressed, 2 = released.
 		int mousePresses[3] = {0}; // same as above
+		glm::vec2 currentMousePos = glm::vec2(0,0);
+		glm::vec2 prevMousePos = glm::vec2(0,0);
 
 		auto PollInput() -> void{
 			for (auto& c : keyPresses){
@@ -167,6 +169,7 @@ namespace Vex{
 			mousePresses[0] = 0;
 			mousePresses[1] = 0;
 			mousePresses[2] = 0;
+			prevMousePos = currentMousePos;
 			glfwPollEvents();
 		}
 
@@ -174,24 +177,43 @@ namespace Vex{
 			if (auto it = keycodes.find(keyname); it != keycodes.end()){
 			    return it->second;
 			} else {
+				std::cout << "Vex Input Warning: " << keyname << " could not be found." << std::endl;
 			    return -1;
 			}
 		}
 
 		auto GetKeyDown(int code) -> bool{
+			if(keyPresses.find(code) == keyPresses.end()){
+				std::cout << "Vex Input Error: " << code << " is not a valid key code." << std::endl;
+				return false;
+			}
 			return keyPresses[code] == 1;
 		}
 		auto GetKeyUp(int code) -> bool{
+			if(keyPresses.find(code) == keyPresses.end()){
+				std::cout << "Vex Input Error: " << code << " is not a valid key code." << std::endl;
+				return false;
+			}
 			return keyPresses[code] == 2;
 		}
 		auto GetKey(int code) -> bool{
 			return glfwGetKey(window, code) == GLFW_PRESS;
 		}
 		auto GetKeyDown(const std::string& code) -> bool{
-			return keyPresses[GetKeyCode(code)] == 1;
+			int kcode = GetKeyCode(code);
+			if(keyPresses.find(kcode) == keyPresses.end()){
+				std::cout << "Vex Input Error: " << code << " is not a valid key." << std::endl;
+				return false;
+			}
+			return keyPresses[kcode] == 1;
 		}
 		auto GetKeyUp(const std::string& code) -> bool{
-			return keyPresses[GetKeyCode(code)] == 2;
+			int kcode = GetKeyCode(code);
+			if(keyPresses.find(kcode) == keyPresses.end()){
+				std::cout << "Vex Input Error: " << code << " is not a valid key." << std::endl;
+				return false;	
+			}
+			return keyPresses[kcode] == 2;
 		}
 		auto GetKey(const std::string& code) -> bool{
 			return glfwGetKey(window, GetKeyCode(code)) == GLFW_PRESS;
@@ -211,26 +233,47 @@ namespace Vex{
 				mousePresses[button] = 2;
 			}
 		}
+		auto cursor_position_callback(GLFWwindow* window, double xpos, double ypos){
+			prevMousePos = currentMousePos;
+			currentMousePos = glm::vec2(xpos, ypos);
+		}
 
 		auto GetMousePosition() -> glm::vec2{
-			double posX, posY;
-			glfwGetCursorPos(window, &posX, &posY);
-			return glm::vec2(posX, posY);	
+			return currentMousePos;	
+		}
+		auto GetMouseDelta() -> glm::vec2{
+			return currentMousePos - prevMousePos;
 		}
 
 		auto GetMouseButton(int button) -> bool{
-			return glfwGetMouseButton(window, button) == GLFW_PRESS;
+			if(button > -1 && button < 3){
+				return glfwGetMouseButton(window, button) == GLFW_PRESS;
+			}else{
+				std::cout << "Vex Input Error: There is no mouse button " << button << ". Valid mouse buttons are 0, 1, and 2." << std::endl;
+				return false;
+			}
 		}
 		auto GetMouseButtonDown(int button) -> bool{
-			return mousePresses[button] == 1;
+			if(button > -1 && button < 3){
+				return mousePresses[button] == 1;
+			}else{
+				std::cout << "Vex Input Error: There is no mouse button " << button << ". Valid mouse buttons are 0, 1, and 2." << std::endl;
+				return false;
+			}
 		}
 		auto GetMouseButtonUp(int button) -> bool{
-			return mousePresses[button] == 2;
+			if(button > -1 && button < 3){
+				return mousePresses[button] == 2;
+			}else{
+				std::cout << "Vex Input Error: There is no mouse button " << button << ". Valid mouse buttons are 0, 1, and 2." << std::endl;
+				return false;
+			}
 		}
 		auto InputInit(GLFWwindow* w) -> void{
 			window = w;
 			glfwSetKeyCallback(window, key_callback);
 			glfwSetMouseButtonCallback(window, mouse_button_callback);
+			glfwSetCursorPosCallback(window, cursor_position_callback);
 			for (auto& c : keycodes){
 				keyPresses.insert(std::make_pair(c.second, 0));
 			}
