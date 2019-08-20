@@ -44,36 +44,41 @@ auto main() -> int {
 	};
 	Vex::Update = [&c,&e](float dt){
 		Vex::Input::PollInput();
-		if(Vex::Input::GetKey("Space")){
+		if(Vex::Input::KeyDown("Space")){
 			e.Rotate(glm::vec3(0.5f * dt, 0.5f * dt, 0.5f * dt));
 		}
 		//c->Rotate(glm::vec3(0.0f, 0.5f * dt, 0.0f));
-		if(Vex::Input::GetKey(999999)){
+		if(Vex::Input::KeyDown("Up")){
 			e.SetPosition(e.GetPosition() + glm::vec3(0.0f, 0.9f*dt, 0.0f));
-		}else if(Vex::Input::GetKey("Down")){
+		}else if(Vex::Input::KeyDown("Down")){
 			e.SetPosition(e.GetPosition() + glm::vec3(0.0f, -0.9f*dt, 0.0f));
 		}
-		if(Vex::Input::GetKey("Left")){
+		if(Vex::Input::KeyDown("Left")){
 			e.SetPosition(e.GetPosition() + glm::vec3(-0.9f*dt, 0.0f, 0.0f));
-		}else if(Vex::Input::GetKey("Right")){
+		}else if(Vex::Input::KeyDown("Right")){
 			e.SetPosition(e.GetPosition() + glm::vec3(0.9f*dt, 0.0f, 0.0f));
 		}
-		if(Vex::Input::GetKeyDown("Left_Shift")){
+		if(Vex::Input::KeyPressed("Left_Shift")){
 			glm::vec2 mousePos = Vex::Input::GetMousePosition();
 			std::cout << "Left Shift Down, mouse position is: " << mousePos.x << ", " << mousePos.y << std::endl;
+			Vex::Input::HideCursor(true);
 		}
-		if(Vex::Input::GetKeyUp("Left_Shift")){
+		if(Vex::Input::KeyReleased("Left_Shift")){
 			std::cout << "Left Shift Up" << std::endl;
+			Vex::Input::ShowCursor();
 		}
-		if(Vex::Input::GetMouseButtonDown(1)){
+		if(Vex::Input::MouseButtonPressed(1)){
 			std::cout << "Right Mouse Button Down" << std::endl;
 		}
-		if(Vex::Input::GetMouseButtonUp(1)){
+		if(Vex::Input::MouseButtonReleased(1)){
 			std::cout << "Right Mouse Button Up" << std::endl;
 		}
-		if(Vex::Input::GetMouseButton(0)){
+		if(Vex::Input::MouseButtonDown(0)){
 			glm::vec2 delta = Vex::Input::GetMouseDelta();
 			std::cout << "Mouse Delta: " << delta.x << ", " << delta.y << std::endl;
+		}
+		if(Vex::Input::KeyDown("A")){
+			std::cout << "Scroll: " << Vex::Input::GetScrollVertical() << std::endl;
 		}
 		for (auto& p : Vex::object_table){
 			p.second->Update(dt);
