@@ -35,6 +35,8 @@ namespace Vex {
 
 			auto internal_render() -> void;
 	};
+
+	std::shared_ptr<Vex::Camera> ActiveCamera;
 }
 
 Vex::Camera::Camera(std::string name, glm::vec3 position, glm::vec3 rotation, float FoV, float aspectRatio) : GameObject(name, position, rotation) {

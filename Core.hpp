@@ -4,6 +4,7 @@
 #include <iostream>
 #include <regex>
 #include <map>
+#include <algorithm>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -44,6 +45,7 @@ namespace Vex {
 			auto ShouldClose() -> bool;
 			auto PollEvents() -> void;
 			auto GetWindow() -> GLFWwindow*;
+			auto Close() -> void;
 	};
 }
 
@@ -203,6 +205,10 @@ auto Vex::Window::PollEvents() -> void {
 
 auto Vex::Window::GetWindow() -> GLFWwindow* {
 	return this->window;
+}
+
+auto Vex::Window::Close() -> void {
+	glfwSetWindowShouldClose(this->window, GLFW_TRUE);
 }
 
 #endif

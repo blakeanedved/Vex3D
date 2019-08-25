@@ -164,7 +164,7 @@ namespace Vex{
 		auto GetScrollHorizontal() -> float;
 		auto HideCursor(bool disable) -> void;
 		auto ShowCursor() -> void;
-		//auto RawMouseMotion(bool enabled) -> void;
+		auto RawMouseMotion(bool enabled) -> void;
 		auto Init(GLFWwindow* w) -> void;
 	};		
 }
@@ -307,13 +307,13 @@ auto Vex::Input::ShowCursor() -> void {
 	glfwSetInputMode(Vex::Input::window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	Vex::Input::cursorDisabled = false;
 }
-//auto Vex::Input::RawMouseMotion(bool enabled) -> void {
-	//if (glfwRawMouseMotionSupported()){
-		//glfwSetInputMode(Vex::Input::window, GLFW_RAW_MOUSE_MOTION, enabled);
-	//}else if(enabled){
-		//std::cout << "Vex Input Warning: Raw mouse motion is not supported on this device" << std::endl;
-	//}
-//}
+auto Vex::Input::RawMouseMotion(bool enabled) -> void {
+	if (glfwRawMouseMotionSupported()){
+		glfwSetInputMode(Vex::Input::window, GLFW_RAW_MOUSE_MOTION, enabled);
+	}else if(enabled){
+		std::cout << "Vex Input Warning: Raw mouse motion is not supported on this device" << std::endl;
+	}
+}
 auto Vex::Input::Init(GLFWwindow* w) -> void {
 	Vex::Input::window = w;
 	glfwSetKeyCallback(Vex::Input::window, Vex::Input::key_callback);
