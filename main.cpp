@@ -21,9 +21,10 @@ auto main() -> int {
 			2, 0, 3
 	});
 
-	Vex::Input::InputInit(window->GetWindow());
+	Vex::Input::Init(window->GetWindow());
 
-	auto c = std::make_unique<Vex::Camera>("main_camera", glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), 60.0f, 16.0f / 10.0f);
+	auto c = std::make_shared<Vex::Camera>("main_camera", glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), 60.0f, 16.0f / 10.0f);
+	Vex::ActiveCamera = c;
 
 	auto t = std::make_unique<Vex::Texture>("resources/images/blackhole.jpg");
 
@@ -42,58 +43,26 @@ auto main() -> int {
 		Vex::DefaultShader->Bind();
 		Vex::DefaultShader->SetUniform("MVP", c->GetMVP());
 	};
-	Vex::Update = [&c,&e](float dt){
-		Vex::Input::PollInput();
-		if(Vex::Input::KeyDown("Space")){
-			e.Rotate(glm::vec3(0.5f * dt, 0.5f * dt, 0.5f * dt));
-		}
-		//c->Rotate(glm::vec3(0.0f, 0.5f * dt, 0.0f));
-		if(Vex::Input::KeyDown("Up")){
-			e.SetPosition(e.GetPosition() + glm::vec3(0.0f, 0.9f*dt, 0.0f));
-		}else if(Vex::Input::KeyDown("Down")){
-			e.SetPosition(e.GetPosition() + glm::vec3(0.0f, -0.9f*dt, 0.0f));
-		}
-		if(Vex::Input::KeyDown("Left")){
-			e.SetPosition(e.GetPosition() + glm::vec3(-0.9f*dt, 0.0f, 0.0f));
-		}else if(Vex::Input::KeyDown("Right")){
-			e.SetPosition(e.GetPosition() + glm::vec3(0.9f*dt, 0.0f, 0.0f));
-		}
-		if(Vex::Input::KeyPressed("Left_Shift")){
-			glm::vec2 mousePos = Vex::Input::GetMousePosition();
-			std::cout << "Left Shift Down, mouse position is: " << mousePos.x << ", " << mousePos.y << std::endl;
-			Vex::Input::HideCursor(true);
-		}
-		if(Vex::Input::KeyReleased("Left_Shift")){
-			std::cout << "Left Shift Up" << std::endl;
-			Vex::Input::ShowCursor();
-		}
-		if(Vex::Input::MouseButtonPressed(1)){
-			std::cout << "Right Mouse Button Down" << std::endl;
-		}
-		if(Vex::Input::MouseButtonReleased(1)){
-			std::cout << "Right Mouse Button Up" << std::endl;
-		}
-		if(Vex::Input::MouseButtonDown(0)){
-			glm::vec2 delta = Vex::Input::GetMouseDelta();
-			std::cout << "Mouse Delta: " << delta.x << ", " << delta.y << std::endl;
-		}
-		if(Vex::Input::KeyDown("A")){
-			std::cout << "Scroll: " << Vex::Input::GetScrollVertical() << std::endl;
+	Vex::Update = [&window,&c](float dt){
+		Vex::Input::Poll();
+		c->Rotate(glm::vec3(0.0f, 0.5f * dt, 0.0f));
+		if (Vex::Input::KeyReleased("Escape")){
+			window->Close();
 		}
 		for (auto& p : Vex::object_table){
 			p.second->Update(dt);
 		}
 	};
-	Vex::Render = [&s,&t,&c](){
+	Vex::Render = [&s,&t](){
 		glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Vex::DefaultShader->Bind();
-		Vex::DefaultShader->SetUniform("MVP", c->GetMVP());
+		Vex::DefaultShader->SetUniform("MVP", Vex::ActiveCamera->GetMVP());
 	
 		t->Bind();
 		s->Bind();
 
-		s->SetUniform("MVP", c->GetMVP());
+		s->SetUniform("MVP", Vex::ActiveCamera->GetMVP());
 		for (auto& p : Vex::object_table){
 			s->SetUniform("pos", p.second->GetPosition());
 			s->SetUniform("rotMatrix", p.second->GenerateRotMatrix());
