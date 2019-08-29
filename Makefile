@@ -11,6 +11,6 @@ debug-linux: main.cpp
 	g++ -g -std=c++17 main.cpp -L/usr/local/lib -lglfw3 -lGLEW -lGL -lpthread -lX11 -ldl
 
 clean:
-	rm -rf a.out a.exe
+	rm -rf a.out .DS_Store **/.DS_Store a.exe
 
 all: mac

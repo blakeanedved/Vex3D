@@ -1,5 +1,4 @@
-#ifndef _VEX3D_SHADER_
-#define _VEX3D_SHADER_
+#pragma once
 
 #include "Core.hpp"
 #include <map>
@@ -173,5 +172,3 @@ auto Vex::Shader::LoadShaders(const char* vertex_file_path, const char* fragment
 
     return ProgramID;
 }
-
-#endif

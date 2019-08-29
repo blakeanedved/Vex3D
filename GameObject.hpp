@@ -1,5 +1,4 @@
-#ifndef _VEX3D_GAMEOBJECT_
-#define _VEX3D_GAMEOBJECT_
+#pragma once
 
 // IDK HOW WELL THE ROTATION WORKS BUT I AM GOING TO MARK IT DONE
 
@@ -144,5 +143,3 @@ auto Vex::GameObject::GenerateRotMatrix() -> glm::mat4 {
 	rotMatrix = glm::rotate(rotMatrix, this->rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
 	return rotMatrix;
 }
-
-#endif

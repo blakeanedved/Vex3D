@@ -1,5 +1,4 @@
-#ifndef _VEX3D_CORE_
-#define _VEX3D_CORE_
+#pragma once
 
 #include <iostream>
 #include <regex>
@@ -212,5 +211,3 @@ auto Vex::Window::GetWindow() -> GLFWwindow* {
 auto Vex::Window::Close() -> void {
 	glfwSetWindowShouldClose(this->window, GLFW_TRUE);
 }
-
-#endif

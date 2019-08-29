@@ -1,5 +1,4 @@
-#ifndef _VEX3D_TEXTURE_
-#define _VEX3D_TEXTURE_
+#pragma once
 
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -55,5 +54,3 @@ auto Vex::Texture::Bind(GLuint slot) -> void {
 auto Vex::Texture::Unbind() -> void {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
-
-#endif

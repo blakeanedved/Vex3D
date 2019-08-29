@@ -1,5 +1,4 @@
-#ifndef _VEX3D_CAMERA_
-#define _VEX3D_CAMERA_
+#pragma once
 
 #include "GameObject.hpp"
 
@@ -120,5 +119,3 @@ auto Vex::Camera::update_projection() -> void {
 }
 
 auto Vex::Camera::internal_render() -> void {} // Pretty sure this has to be here just to override the pure virual GameObject::internal_render()
-
-#endif

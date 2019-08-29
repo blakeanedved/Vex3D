@@ -1,11 +1,3 @@
-//
-//  Entity.cpp
-//  Vex3D
-//
-//  Created by Blake Nedved on 8/27/19.
-//  Copyright © 2019 Blake Nedved. All rights reserved.
-//
-
 #pragma once
 
 #include <assimp/scene.h>

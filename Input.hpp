@@ -1,5 +1,5 @@
-#ifndef _VEX3D_INPUT_
-#define _VEX3D_INPUT_
+#pragma once
+
 #include "Core.hpp"
 
 #include <iostream>
@@ -324,5 +324,3 @@ auto Vex::Input::Init(GLFWwindow* w) -> void {
 		Vex::Input::keyPresses.insert(std::make_pair(c.second, 0));
 	}
 }
-
-#endif
