@@ -17,32 +17,32 @@
 
 namespace Vex {
     class MeshComponent {
-    protected:
-        enum BUFFERS {
-            VERTEX_BUFFER, TEXCOORD_BUFFER, NORMAL_BUFFER, INDEX_BUFFER
-        };
-        GLuint vbo[4];
-        GLuint vao;
-        
-        unsigned int elementCount;
-        
-    public:
-        MeshComponent(aiMesh *mesh);
-        MeshComponent(std::vector<float> vertices, std::vector<unsigned int> indices);
-        ~MeshComponent();
-        
-        auto Render() -> void;
+		protected:
+			enum BUFFERS {
+				VERTEX_BUFFER, TEXCOORD_BUFFER, NORMAL_BUFFER, INDEX_BUFFER
+			};
+			GLuint vbo[4];
+			GLuint vao;
+			
+			unsigned int elementCount;
+			
+		public:
+			MeshComponent(aiMesh *mesh);
+			MeshComponent(std::vector<float> vertices, std::vector<unsigned int> indices);
+			~MeshComponent();
+			
+			auto Render() -> void;
     };
     
     class Mesh : public GameObject {
-    protected:
-        std::vector<std::unique_ptr<Vex::MeshComponent>> meshcomponents;
-        
-    public:
-        Mesh(std::string name, glm::vec3 position, glm::vec3 rotation, const std::string& filename);
-        Mesh(std::string name, glm::vec3 position, glm::vec3 rotation, std::vector<float> vertices, std::vector<unsigned int> indices);
-        ~Mesh();
-        auto internal_render() -> void;
+		protected:
+			std::vector<std::unique_ptr<Vex::MeshComponent>> meshcomponents;
+			
+		public:
+			Mesh(std::string name, glm::vec3 position, glm::vec3 rotation, const std::string& filename);
+			Mesh(std::string name, glm::vec3 position, glm::vec3 rotation, std::vector<float> vertices, std::vector<unsigned int> indices);
+			~Mesh();
+			auto internal_render() -> void;
     };
 }
 
