@@ -7,6 +7,9 @@
 #include <map>
 #include <vector>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace Vex {
 	class GameObject {
 		public:

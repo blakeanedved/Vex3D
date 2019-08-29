@@ -1,9 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <regex>
-#include <map>
-#include <algorithm>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -13,9 +10,6 @@
 #elif __linux__
 #include <GL/gl.h>
 #endif
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 namespace Vex {
 	std::function<void()> Init = [](){};

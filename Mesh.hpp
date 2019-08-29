@@ -5,6 +5,13 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 
+#include <iostream>
+#include <vector>
+#include <memory>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "GameObject.hpp"
 #include "Core.hpp"
 

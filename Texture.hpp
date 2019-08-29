@@ -5,7 +5,6 @@
 #include "Core.hpp"
 #include "stb_image/stb_image.h"
 
-
 namespace Vex {
 	class Texture {
 		private:
