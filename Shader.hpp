@@ -36,6 +36,8 @@ namespace Vex {
 	auto ShaderInit() -> void {
 		Vex::DefaultShader = std::make_unique<Vex::Shader>("shaders/default/vert.glsl", "shaders/default/frag.glsl");
 		Vex::DefaultShader->AddUniform("MVP");
+		Vex::DefaultShader->AddUniform("pos");
+		Vex::DefaultShader->AddUniform("rotMatrix");
 	}
 }
 

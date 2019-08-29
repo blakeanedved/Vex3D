@@ -32,6 +32,8 @@ auto main() -> int {
 		std::cout << "Vex3D Initialized" << std::endl;
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
+
+		// Default Shader Setup
 		Vex::ShaderInit();
 		Vex::DefaultShader->Bind();
 		Vex::DefaultShader->SetUniform("MVP", c->GetMVP());
@@ -50,14 +52,23 @@ auto main() -> int {
 	Vex::Render = [&s,&t](){
 		glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Set MVP uniform on the Default Shader
 		Vex::DefaultShader->Bind();
 		Vex::DefaultShader->SetUniform("MVP", Vex::ActiveCamera->GetMVP());
 	
 		t->Bind();
-		s->Bind();
 
+		s->Bind();
 		s->SetUniform("MVP", Vex::ActiveCamera->GetMVP());
+
 		for (auto& p : Vex::object_table){
+			// Model Specific Default Shader Uniform assignment
+			Vex::DefaultShader->Bind();
+			Vex::DefaultShader->SetUniform("pos", p.second->GetPosition());
+			Vex::DefaultShader->SetUniform("rotMatrix", p.second->GenerateRotMatrix());
+
+			s->Bind();
 			s->SetUniform("pos", p.second->GetPosition());
 			s->SetUniform("rotMatrix", p.second->GenerateRotMatrix());
 			p.second->internal_render();
