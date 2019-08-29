@@ -186,21 +186,21 @@ auto Vex::Input::GetKeyCode(const std::string& keyname_input) -> int {
 	if (auto it = Vex::Input::keycodes.find(keyname); it != Vex::Input::keycodes.end()){
 		return it->second;
 	} else {
-		std::cout << "Vex Input Warning: " << keyname << " could not be found." << std::endl;
+		std::cout << "Error at Vex::Input::GetKeyCode(const std::string&) in Input.hpp\n" << keyname << " could not be found" << std::endl;
 		return -1;
 	}
 }
 
 auto Vex::Input::KeyPressed(int code) -> bool { 
 	if(Vex::Input::keyPresses.find(code) == Vex::Input::keyPresses.end()){
-		std::cout << "Vex Input Error: " << code << " is not a valid key code." << std::endl;
+		std::cout << "Error at Vex::Input::KeyPressed(int) in Input.hpp\n" << code << " is not a valid keycode" << std::endl;
 		return false;
 	}
 	return Vex::Input::keyPresses[code] == 1;
 }
 auto Vex::Input::KeyReleased(int code) -> bool {
 	if(Vex::Input::keyPresses.find(code) == Vex::Input::keyPresses.end()){
-		std::cout << "Vex Input Error: " << code << " is not a valid key code." << std::endl;
+		std::cout << "Error at Vex::Input::KeyReleased(int) in Input.hpp\n" << code << " is not a valid keycode" << std::endl;
 		return false;
 	}
 	return Vex::Input::keyPresses[code] == 2;
@@ -211,7 +211,7 @@ auto Vex::Input::KeyDown(int code) -> bool {
 auto Vex::Input::KeyPressed(const std::string& code) -> bool {
 	int kcode = Vex::Input::GetKeyCode(code);
 	if(Vex::Input::keyPresses.find(kcode) == Vex::Input::keyPresses.end()){
-		std::cout << "Vex Input Error: " << code << " is not a valid key." << std::endl;
+		std::cout << "Error at Vex::Input::KeyPressed(const std::string&) in Input.hpp\n" << code << " is not a valid key" << std::endl;
 		return false;
 	}
 	return Vex::Input::keyPresses[kcode] == 1;
@@ -219,7 +219,7 @@ auto Vex::Input::KeyPressed(const std::string& code) -> bool {
 auto Vex::Input::KeyReleased(const std::string& code) -> bool {
 	int kcode = Vex::Input::GetKeyCode(code);
 	if(Vex::Input::keyPresses.find(kcode) == Vex::Input::keyPresses.end()){
-		std::cout << "Vex Input Error: " << code << " is not a valid key." << std::endl;
+		std::cout << "Error at Vex::Input::KeyReleased(const std::string&) in Input.hpp\n" << code << " is not a valid key" << std::endl;
 		return false;	
 	}
 	return Vex::Input::keyPresses[kcode] == 2;
@@ -252,7 +252,7 @@ auto Vex::Input::scroll_callback(GLFWwindow* window, double xoffset, double yoff
 
 auto Vex::Input::GetMousePosition() -> glm::vec2 {
 	if(Vex::Input::cursorDisabled == true){
-		std::cout << "Vex Input Warning: Cursor is disabled, use GetMouseDelta() instead of GetMousePosition()." << std::endl;
+		std::cout << "Error at Vex::Input::GetMousePosition() in Input.hpp\nCursor is disabled, use Vex::Input::GetMouseDelta() instead" << std::endl;
 		return glm::vec2(0,0);
 	}else{
 		return Vex::Input::currentMousePos;
@@ -266,7 +266,7 @@ auto Vex::Input::MouseButtonDown(int button) -> bool {
 	if(button > -1 && button < 3){
 		return glfwGetMouseButton(Vex::Input::window, button) == GLFW_PRESS;
 	}else{
-		std::cout << "Vex Input Error: There is no mouse button " << button << ". Valid mouse buttons are 0, 1, and 2." << std::endl;
+		std::cout << "Error at Vex::Input::MouseButtonDown(int) in Input.hpp\nMouse button " << button << " does not exist " << std::endl;
 		return false;
 	}
 }
@@ -274,7 +274,7 @@ auto Vex::Input::MouseButtonPressed(int button) -> bool {
 	if(button > -1 && button < 3){
 		return Vex::Input::mousePresses[button] == 1;
 	}else{
-		std::cout << "Vex Input Error: There is no mouse button " << button << ". Valid mouse buttons are 0, 1, and 2." << std::endl;
+		std::cout << "Error at Vex::Input::MouseButtonPressed(int) in Input.hpp\nMouse button " << button << " does not exist " << std::endl;
 		return false;
 	}
 }
@@ -282,7 +282,7 @@ auto Vex::Input::MouseButtonReleased(int button) -> bool {
 	if(button > -1 && button < 3){
 		return Vex::Input::mousePresses[button] == 2;
 	}else{
-		std::cout << "Vex Input Error: There is no mouse button " << button << ". Valid mouse buttons are 0, 1, and 2." << std::endl;
+		std::cout << "Error at Vex::Input::MouseButtonReleased(int) in Input.hpp\nMouse button " << button << " does not exist " << std::endl;
 		return false;
 	}
 }
@@ -311,7 +311,7 @@ auto Vex::Input::RawMouseMotion(bool enabled) -> void {
 	if (glfwRawMouseMotionSupported()){
 		glfwSetInputMode(Vex::Input::window, GLFW_RAW_MOUSE_MOTION, enabled);
 	}else if(enabled){
-		std::cout << "Vex Input Warning: Raw mouse motion is not supported on this device" << std::endl;
+		std::cout << "Error at Vex::Input::RawMouseMotion(bool) in Input.hpp\nRaw mouse motion is not supported on this device" << std::endl;
 	}
 }
 auto Vex::Input::Init(GLFWwindow* w) -> void {

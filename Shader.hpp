@@ -96,10 +96,7 @@ auto Vex::Shader::LoadShaders(const char* vertex_file_path, const char* fragment
         VertexShaderCode = sstr.str();
         VertexShaderStream.close();
     } else {
-        printf("Impossible to open %s. Are you in the right directory ? Don't "
-               "forget to read the FAQ !\n",
-               vertex_file_path);
-        getchar();
+		std::cout << "Error at Vex::Shader::LoadShaders(const char*, const char*) in Vex::Shader.hpp\nError loading file \"" << vertex_file_path << "\" file does not exist" << std::endl;
         return 0;
     }
 
@@ -111,7 +108,10 @@ auto Vex::Shader::LoadShaders(const char* vertex_file_path, const char* fragment
         sstr << FragmentShaderStream.rdbuf();
         FragmentShaderCode = sstr.str();
         FragmentShaderStream.close();
-    }
+    } else {
+		std::cout << "Error at Vex::Shader::LoadShaders(const char*, const char*) in Vex::Shader.hpp\nError loading file \"" << fragment_file_path << "\" file does not exist" << std::endl;
+        return 0;
+	}
 
     GLint Result = GL_FALSE;
     int InfoLogLength;

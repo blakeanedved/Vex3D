@@ -51,23 +51,25 @@ namespace Vex {
 
 auto Vex::CheckForErrors() -> void {
 	while ((err = glGetError()) != GL_NO_ERROR){
+		std::string error;
 		if (err == GL_INVALID_ENUM){
-			fprintf( stderr, "GL CALLBACK: ** GL ERROR ** message = GL_INVALID_ENUM\n");
+			error = "GL CALLBACK: ** GL ERROR ** message = GL_INVALID_ENUM\n";
 		} else if (err == GL_INVALID_VALUE){
-			fprintf( stderr, "GL CALLBACK: ** GL ERROR ** message = GL_INVALID_VALUE\n");
+			error = "GL CALLBACK: ** GL ERROR ** message = GL_INVALID_VALUE\n";
 		} else if (err == GL_INVALID_OPERATION){
-			fprintf( stderr, "GL CALLBACK: ** GL ERROR ** message = GL_INVALID_OPERATION\n");
+			error = "GL CALLBACK: ** GL ERROR ** message = GL_INVALID_OPERATION\n";
 		} else if (err == GL_STACK_OVERFLOW){
-			fprintf( stderr, "GL CALLBACK: ** GL ERROR ** message = GL_STACK_OVERFLOW\n");
+			error = "GL CALLBACK: ** GL ERROR ** message = GL_STACK_OVERFLOW\n";
 		} else if (err == GL_STACK_UNDERFLOW){
-			fprintf( stderr, "GL CALLBACK: ** GL ERROR ** message = GL_STACK_UNDERFLOW\n");
+			error = "GL CALLBACK: ** GL ERROR ** message = GL_STACK_UNDERFLOW\n";
 		} else if (err == GL_OUT_OF_MEMORY){
-			fprintf( stderr, "GL CALLBACK: ** GL ERROR ** message = GL_OUT_OF_MEMORY\n");
+			error = "GL CALLBACK: ** GL ERROR ** message = GL_OUT_OF_MEMORY\n";
 		} else if (err == GL_INVALID_FRAMEBUFFER_OPERATION){
-			fprintf( stderr, "GL CALLBACK: ** GL ERROR ** message = GL_INVALID_FRAMEBUFFER_OPERATION\n");
+			error = "GL CALLBACK: ** GL ERROR ** message = GL_INVALID_FRAMEBUFFER_OPERATION\n";
 		} else if (err == GL_CONTEXT_LOST){
-			fprintf( stderr, "GL CALLBACK: ** GL ERROR ** message = GL_CONTEXT_LOST\n");
+			error = "GL CALLBACK: ** GL ERROR ** message = GL_CONTEXT_LOST\n";
 		}
+		std::cout << "Fatal error at Vex::CheckForErrors() in Core.hpp\nOpenGL error: " << error.c_str() << std::endl;
 		exit(1);
 	}
 }
@@ -78,7 +80,7 @@ Vex::Window::Window(int width, int height, char* title){
 
 	glewExperimental = true;
 	if (!glfwInit()){
-		std::cout << "Failed to initialize GLFW" << std::endl;
+		std::cout << "Fatal error at Vex::Window::Window(int width, int height, char* title) in Core.hpp\nFailed to initialize GLFW" << std::endl;
 		exit(1);
 	}
 
@@ -90,7 +92,7 @@ Vex::Window::Window(int width, int height, char* title){
 	this->window = glfwCreateWindow(width, height, title, NULL, NULL);
 
 	if (this->window == NULL){
-		std::cout << "Failed to open GLFW window" << std::endl;
+		std::cout << "Fatal error at Vex::Window::Window(int width, int height, char* title) in Core.hpp\nFailed to open GLFW window" << std::endl;
 		glfwTerminate();
 		exit(1);
 	}
@@ -104,7 +106,7 @@ Vex::Window::Window(int width, int height, char* title){
 	});
 
 	if (glewInit() != GLEW_OK){
-		std::cout << "Failed to initialize GLEW" << std::endl;
+		std::cout << "Fatal error at Vex::Window::Window(int width, int height, char* title) in Core.hpp\nFailed to initialize GLEW" << std::endl;
 		glfwTerminate();
 		exit(1);
 	}
@@ -115,13 +117,13 @@ Vex::Window::Window(int width, int height, char* title){
 	glGetIntegerv(GL_MAJOR_VERSION, &this->gl_version_major);
 	glGetIntegerv(GL_MINOR_VERSION, &this->gl_version_minor);
 	std::cout << "OpenGL Version: " << this->gl_version_major << "." << this->gl_version_minor << std::endl;
-	if ((this->gl_version_major == 4 && this->gl_version_minor >= 3) || (this->gl_version_major > 4)){
-		glEnable(GL_DEBUG_OUTPUT);
-		glDebugMessageCallback([](GLenum source, GLenum type, GLenum id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam){
-			fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type, severity, message);
-			exit(1);
-		}, 0);
-	}
+	//if ((this->gl_version_major == 4 && this->gl_version_minor >= 3) || (this->gl_version_major > 4)){
+		//glEnable(GL_DEBUG_OUTPUT);
+		//glDebugMessageCallback([](GLenum source, GLenum type, GLenum id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam){
+			//fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n", (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""), type, severity, message);
+			//exit(1);
+		//}, 0);
+	//}
 }
 
 Vex::Window::~Window(){

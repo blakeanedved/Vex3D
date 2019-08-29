@@ -238,7 +238,7 @@ Vex::Mesh::Mesh(std::string name, glm::vec3 position, glm::vec3 rotation, const 
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(filename, 0);
     if(!scene) {
-        printf("Unable to load mesh: %s\n", importer.GetErrorString());
+		std::cout << "Error at Vex::Mesh::Mesh(std::string, glm::vec3, glm::vec3, const std::string&) in Mesh.hpp\nUnable to import model \"" << filename << "\", assimp error: " << importer.GetErrorString() << std::endl;
     }
 
     for(int i = 0; i < scene->mNumMeshes; ++i) {

@@ -51,8 +51,8 @@ namespace Vex {
 
 Vex::GameObject::GameObject(std::string name, glm::vec3 position, glm::vec3 rotation) {
 	if (object_table.find(name) != object_table.end()){
-		std::cout << "Entity " << name << " already exists" << std::endl;
-		exit(1);
+		std::cout << "Error at Vex::GameObject::GameObject(std::string, glm::vec3, glm::vec3) in GameObject.hpp\nGameObject \"" << name << "\" already exists" << std::endl;
+		return;
 	}
 	object_table.insert(std::make_pair(name, this));
 	this->name = std::move(name);
